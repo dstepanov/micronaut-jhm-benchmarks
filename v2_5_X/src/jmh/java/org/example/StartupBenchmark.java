@@ -17,7 +17,7 @@ public class StartupBenchmark {
 
     @Benchmark
     public void startup(Blackhole bh) {
-        ApplicationContext context = ApplicationContext.run();
+        ApplicationContext context = ApplicationContext.builder().deduceEnvironment(false).start();
         HelloWorldController controller = context.getBean(HelloWorldController.class);
         bh.consume(controller);
     }
