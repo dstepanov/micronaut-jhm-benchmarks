@@ -1,0 +1,28 @@
+plugins {
+  id "io.micronaut.minimal.application" version "3.6.7"
+  id "me.champeau.jmh" version "0.6.8"
+  id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+repositories {
+  maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+  mavenCentral()
+}
+
+micronaut {
+  version "4.0.0-SNAPSHOT"
+  runtime "netty"
+}
+
+application {
+  mainClass.set("org.example.Application")
+}
+
+dependencies {
+  runtimeOnly("ch.qos.logback:logback-classic")
+  runtimeOnly("io.micronaut.serde:micronaut-serde-jackson")
+}
+
+jmh {
+  resultFormat = 'CSV'
+}

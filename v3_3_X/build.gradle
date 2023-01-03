@@ -1,0 +1,26 @@
+plugins {
+  id "io.micronaut.minimal.application" version "3.6.7"
+  id "me.champeau.jmh" version "0.6.8"
+  id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+repositories {
+  mavenCentral()
+}
+
+micronaut {
+  version "3.3.4"
+  runtime "netty"
+}
+
+application {
+  mainClass.set("org.example.Application")
+}
+
+dependencies {
+  runtimeOnly("ch.qos.logback:logback-classic")
+}
+
+jmh {
+  resultFormat = 'CSV'
+}
