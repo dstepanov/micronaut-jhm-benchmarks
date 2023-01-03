@@ -1,0 +1,13 @@
+plugins {
+    id 'groovy-gradle-plugin'
+}
+
+repositories {
+    gradlePluginPortal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.github.kayr:fuzzy-csv:1.8.1-groovy3'
+    implementation 'org.codehaus.groovy:groovy:3.0.14'
+}

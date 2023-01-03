@@ -1,0 +1,39 @@
+import fuzzycsv.FuzzyCSVTable
+
+import java.nio.file.Files
+import java.nio.file.Paths
+
+abstract class MergeJmhCsvResultsTask extends DefaultTask {
+
+    @TaskAction
+    def doMerge() {
+        FuzzyCSVTable rootTable
+        project.getRootProject().getSubprojects().forEach {
+            def resultsCsvFile = Paths.get(it.buildDir.getPath(), "results/jmh/results.csv")
+            Project thisProject = it
+            if (Files.exists(resultsCsvFile)) {
+                def csvFileText = Files.readString(resultsCsvFile)
+                FuzzyCSVTable table = FuzzyCSVTable.fromCsvString(csvFileText)
+                table = table.addColumn("Version", { thisProject.name })
+                table = table.moveCol(table.columnIdx("Version"), 0)
+                if (rootTable == null) {
+                    rootTable = table
+                } else {
+                    rootTable = rootTable.mergeByColumn(table)
+                }
+            }
+        }
+        println rootTable.toCsvString()
+    }
+
+}
+
+tasks.register('jmhResults', MergeJmhCsvResultsTask) { MergeJmhCsvResultsTask mergeTask ->
+    rootProject.subprojects { Project subproject ->
+        def jmhTask = subproject.tasks.named("jmh")
+        if (jmhTask) {
+            mergeTask.dependsOn(jmhTask)
+        }
+    }
+}
+
